@@ -22,11 +22,6 @@ router.post("/register", async (req, res) => {
     return res.status(400).json({ message: "Barcha maydonlar to'ldirilishi kerak" });
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Emailni natogri formatda" });
-  }
-
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(password, salt);
 
