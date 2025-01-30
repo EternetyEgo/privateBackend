@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #202022;
+        }
+
+        div {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        span {
+            margin-bottom: 4rem;
+            font-size: x-large;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        a {
+            padding: .8rem 1rem;
+            border: 1px solid white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: x-large;
+            color: white;
+            font-family: monospace;
+            transition: all .2s linear;
+        }
+
+        a:hover {
+            border: 1px solid transparent;
+            background-color: lime;
+            color: black;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <span>🚀 Server is running...</span>
+        <a href="/docs">Swagger Docs</a>
+    </div>
+</body>
+
+</html>
