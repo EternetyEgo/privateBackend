@@ -75,9 +75,6 @@ router.get("/:typre", auth, async (req, res) => {
   const { typre } = req.params;
   try {
     const hesh = await Hesh.findOne({ hesh: typre }); // To'g'ri query
-    if (!hesh) {
-      return res.status(404).json({ status: false, message: "Hesh topilmadi" });
-    }
 
     let allData = await Note.find({ hesh: typre });
 

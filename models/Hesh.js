@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const HeshSchema = new mongoose.Schema(
   {
-    hesh: { type: String, required: true},
-    creator: { type: String, ref: "User", required: true },
+    hesh: { type: String, unique: true, required: true },
+    creator: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );
