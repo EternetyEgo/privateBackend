@@ -2,28 +2,43 @@
 const express = require("express");
 const router = express.Router();
 const Note = require("../models/Note");
+const Hesh = require("../models/Hesh");
 const auth = require("../middleware/token");
 const User = require("../models/User");
 
-// create note
-router.post("/create", auth, async (req, res) => {
-  let { status, title, description, creator } = req.body;
-
-  const validData = await Note.findOne({ title });
-
-  if (validData)
-    return res.json({
-      status: false,
-      message: "Bunday Note oldin yaratilgan",
-    });
-  if (title.length == 0)
-    return res.json({
-      status: false,
-      message: "Ma'lumot toliq emas",
-    });
+router.post("/hesh", auth, async (req, res) => {
+  const { hesh } = req.body;
+  const creator = req.user._id;
 
   const data = new Note({
-    status: status,
+    hesh,
+    creator,
+  });
+
+  try {
+    await data.save();
+
+    res.json({
+      status: true,
+      message: "Hesh saqlandi",
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: "Xatolik yuz berdi",
+    });
+  }
+});
+
+// create note
+router.post("/create", auth, async (req, res) => {
+  let { hesh, title, description, creator } = req.body;
+
+  const validData = await Note.findOne({ title });
+  const heshF = await Hesh.findOne({ hesh });
+
+  const data = new Note({
+    hesh: heshF,
     title: title,
     description: description,
     creator: req.user._id,
@@ -46,6 +61,29 @@ router.get("/all", auth, async (req, res) => {
     res.json({
       status: true,
       message: allData,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Error fetching notes",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/:typre", auth, async (req, res) => {
+  const { typre } = req.params;
+  try {
+    const hesh = await Hesh.findOne({ hesh: typre }); // To'g'ri query
+    if (!hesh) {
+      return res.status(404).json({ status: false, message: "Hesh topilmadi" });
+    }
+
+    let allData = await Note.find({ hesh: typre });
+
+    res.json({
+      status: true,
+      data: allData, // `message` o‘rniga `data`
     });
   } catch (error) {
     res.status(500).json({
@@ -83,7 +121,7 @@ router.get("/:id", auth, async (req, res) => {
 
 // update card
 router.post("/edit", auth, async (req, res) => {
-  const { id, status, title, description } = req.body;
+  const { id, hesh, title, description } = req.body;
   const userId = req.user._id;
   try {
     const eNote = await Note.findOne({ _id: id, creator: userId });
@@ -94,7 +132,7 @@ router.post("/edit", auth, async (req, res) => {
         message: "Bu Note sizga tegishli emas yoki mavjud emas",
       });
     }
-    (eNote.status = status), (eNote.title = title), (eNote.description = description), await eNote.save();
+    (eNote.hesh = hesh), (eNote.title = title), (eNote.description = description), await eNote.save();
     res.json({
       status: true,
       message: "Note yangilandi",

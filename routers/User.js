@@ -16,9 +16,9 @@ router.get("/me", auth, (req, res, next) => {
 
 // sign
 router.post("/register", async (req, res) => {
-  const { username, email, password, job } = req.body;
+  const { username, email, password, about } = req.body;
 
-  if (!username || !email || !password || !job) {
+  if (!username || !email || !password || !about) {
     return res.status(400).json({ message: "Barcha maydonlar to'ldirilishi kerak" });
   }
 
@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
     const newUser = new User({
       username,
       email,
-      job,
+      about,
       password: passwordHash,
     });
     await newUser.save();
