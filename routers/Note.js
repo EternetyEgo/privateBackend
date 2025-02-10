@@ -74,9 +74,8 @@ router.get("/all", auth, async (req, res) => {
 router.get("/:typre", auth, async (req, res) => {
   const { typre } = req.params;
   try {
-    const hesh = await Hesh.findOne({ hesh: typre }); // To'g'ri query
-
-    let allData = await Note.find({ hesh: typre });
+    const hesh = await Hesh.findById(typre);
+    let allData = await Note.find({ hesh: hesh }).populate("hesh")
 
     res.json({
       status: true,
